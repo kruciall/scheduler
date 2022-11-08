@@ -6,7 +6,7 @@ export default function DayListItem(props) {
  
   const spotsRemain = () => {
     if (!props.spots) {
-      return `no props.spots remaining`;
+      return `no spots remaining`;
     }
 
     if (props.spots === 1) {
@@ -19,7 +19,7 @@ export default function DayListItem(props) {
   const dayListItemClass = classNames("day-list__item", {
     "day-list__item--selected": props.selected,
     "day-list__item--full": props.spots === 0
-  });
+  })
 
   return (
     <li  className={dayListItemClass} onClick={() => props.setDay(props.name)}>

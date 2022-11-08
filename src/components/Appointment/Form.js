@@ -3,21 +3,6 @@ import InterviewerList from 'components/InterviewerList';
 import Button from 'components/Button';
 
 
-// The <Form> component should track the following state:
-
-// student:String
-// interviewer:Number
-// The <Form> component should have the following actions:
-
-// setStudent:Function
-// setInterviewer:Function
-// The <Form> component should take the following props:
-// student:String
-// interviewers:Array
-// interviewer:Number
-// onSave:Function
-// onCancel:Function
-
 export default function Form(props) {
 
   const [student, setStudent] = useState(props.student || "");
@@ -27,7 +12,7 @@ export default function Form(props) {
     setInterviewer(null)
   }
 
-  function cancel() {
+  const cancel = () => {
     reset();
     props.onCancel()
   }
@@ -38,7 +23,7 @@ export default function Form(props) {
         <form autoComplete="off"  onSubmit={event => event.preventDefault()}>
           <input
             className="appointment__create-input text--semi-bold"
-            name={props.student}
+            name="name"
             type="text"
             placeholder="Enter Student Name"
             value={student}
@@ -54,8 +39,8 @@ export default function Form(props) {
       </section>
       <section className="appointment__card-right">
         <section className="appointment__actions">
-          <Button onClick={props.onCancel} danger >Cancel</Button>
-          <Button onClick={props.onSave} confirm >Save</Button>
+          <Button onClick={cancel} danger >Cancel</Button>
+          <Button onClick={event => props.onSave(student, interviewer)} confirm >Save</Button>
         </section>
       </section>
     </main>
