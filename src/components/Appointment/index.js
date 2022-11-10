@@ -24,10 +24,9 @@ export default function Appointment(props) {
 
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
-
   );
 
-  //Create interview
+  //Create interview: receive student name and interviewer and transitions to saving status, then shows the appointment when API res finishes. If there is an error it will show the error message
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -41,7 +40,7 @@ export default function Appointment(props) {
       .catch((error) => transition(ERROR_SAVE, true));
   }
 
-  //Remove interview
+  //Remove interview: transitions to deleting status, then call the function to make cancellation req to server, once promise resolves transition to empty and if there is an error it will show the error message
   function remove() {
       transition(DELETING, true);
       props
@@ -50,20 +49,20 @@ export default function Appointment(props) {
        .catch((error) => transition(ERROR_DELETE, true))
      }
 
-  //Edit Interview
+  //Edit Interview: transitions to EDIT status where the user can update name and interviewer
   function edit() {
     transition(EDIT);
   }
 
   return (
-    <article className="appointment">
+    <article className="appointment" data-testid="appointment" >
       <Header time={props.time} />
       {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
-          onDelete={remove}
+          onDelete={() => transition(CONFIRM)}
           onEdit={(edit)}
         />
       )}
