@@ -87,6 +87,7 @@ export default function Appointment(props) {
         interviewers={props.interviewers}
         onCancel={back}
         onSave={save}
+        interviewer={props.interviewer || props.interview?.interviewer.id} setInterviewer={props.setInterviewer}
       />}
       {mode === ERROR_SAVE && <Error message="Error saving! Please try again!" onClose={back}/>}
       {mode === ERROR_DELETE && <Error message="Error deleting! Please try again!" onClose={back}/>}

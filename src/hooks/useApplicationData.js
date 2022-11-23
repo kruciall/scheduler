@@ -2,28 +2,6 @@ import {useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function useApplicationData(initial) {
-
-  useEffect(() => {
-    const dayURL = "/api/days";
-    const appointmentURL = "/api/appointments";
-    const interviewersURL = "/api/interviewers";
-    Promise.all([
-      axios.get(dayURL),
-      axios.get(appointmentURL),
-      axios.get(interviewersURL)
-    ]).then((all) => {
-      setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data }));
-    });
-  }, []);
-  
-  return {
-    state,
-    setDay,
-    bookInterview,
-    cancelInterview
-  }
-  }
-  
   const [state, setState,] = useState({
     day: "Monday",
     days: [],
@@ -32,6 +10,18 @@ export default function useApplicationData(initial) {
   });
   
   const setDay = day => setState({ ...state, day });
+  
+  useEffect(() => {
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments'),
+      axios.get('/api/interviewers')
+    ])
+    .then(all => {
+      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data}));
+    });
+  }, []);
+
 
   function bookInterview(id, interview) {
     console.log(id, interview);
@@ -45,6 +35,7 @@ export default function useApplicationData(initial) {
       ...state.appointments,
       [id]: appointment
     };
+
     const remainingSpots = state.days.map((day) => {
       if (day.appointments.includes(id)) {
         day.spots = day.spots - 1;
@@ -52,6 +43,7 @@ export default function useApplicationData(initial) {
       return day;
     });
 
+    
     return axios.put(`/api/appointments/${id}`,{interview})
     .then(setState({
       ...state,
@@ -59,7 +51,6 @@ export default function useApplicationData(initial) {
       remainingSpots
     }))
   }
-
 
   function cancelInterview(id) {
 
@@ -88,5 +79,11 @@ export default function useApplicationData(initial) {
       remainingSpots
     }))   
   }
-
+  return {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview
+  }
+}
  
